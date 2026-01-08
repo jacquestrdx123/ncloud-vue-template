@@ -1,0 +1,411 @@
+@import "tailwindcss";
+@source "../views";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================================
+   Theme System - CSS Custom Properties
+   Customize these variables per deployment in this file
+   ============================================================================ */
+
+:root {
+    --color-primary: #00ab1a;
+    --color-primary-lighten-1: #003f0e;
+    --color-primary-lighten-2: #005918;
+    --color-primary-darken-1: #00D115;
+    --color-primary-darken-2: #00B800;
+    --color-primary-lighten-3: #73FFA2;
+    --color-secondary: #6B7280;
+    --color-secondary-lighten-1: #9198A6;
+    --color-secondary-lighten-2: #B8BFCD;
+    --color-secondary-darken-1: #515866;
+    --color-secondary-darken-2: #383F4D;
+    --color-secondary-lighten-3: #DEE5F3;
+    --color-accent: #7C3AED;
+    --color-accent-lighten-1: #A260FF;
+    --color-accent-lighten-2: #C987FF;
+    --color-accent-darken-1: #6220D3;
+    --color-accent-darken-2: #4907BA;
+    --color-error: #DC2626;
+    --color-error-lighten-1: #FF4C4C;
+    --color-error-lighten-2: #FF7373;
+    --color-error-darken-1: #C20C0C;
+    --color-error-darken-2: #A90000;
+    --color-success: #059669;
+    --color-success-lighten-1: #2BBC8F;
+    --color-success-lighten-2: #52E3B6;
+    --color-success-darken-1: #007C4F;
+    --color-success-darken-2: #006336;
+    --color-warning: #D97706;
+    --color-warning-lighten-1: #FF9D2C;
+    --color-warning-lighten-2: #FFC453;
+    --color-warning-darken-1: #BF5D00;
+    --color-warning-darken-2: #A64400;
+    --color-info: #1E3A8A;
+    --color-info-lighten-1: #4460B0;
+    --color-info-lighten-2: #6B87D7;
+    --color-info-darken-1: #042070;
+    --color-info-darken-2: #000757;
+    --bg-light-1: #FFFFFF;
+    --bg-light-2: #F8F9FA;
+    --bg-light-3: #F1F3F4;
+    --bg-light-4: #E5E7EB;
+    --bg-card-1: #FFFFFF;
+    --bg-card-2: #F8F9FA;
+    --bg-card-3: #F1F3F4;
+    --bg-card-4: #E5E7EB;
+    --bg-page-1: #F8F9FA;
+    --bg-page-2: #FFFFFF;
+    --bg-page-3: #F9FBFC;
+    --bg-page-4: #E5E7EB;
+    --bg-modal-1: #FFFFFF;
+    --bg-modal-2: #F8F9FA;
+    --bg-modal-3: #F1F3F4;
+    --bg-modal-4: #E5E7EB;
+    --bg-sidebar-1: #FFFFFF;
+    --bg-sidebar-2: #F8F9FA;
+    --bg-sidebar-3: #F1F3F4;
+    --bg-sidebar-4: #E5E7EB;
+    --bg-header-1: #FFFFFF;
+    --bg-header-2: #F8F9FA;
+    --bg-header-3: #F1F3F4;
+    --bg-header-4: #E5E7EB;
+    --bg-elevated-1: #FFFFFF;
+    --bg-elevated-2: #F8F9FA;
+    --bg-elevated-3: #F1F3F4;
+    --bg-elevated-4: #E5E7EB;
+    --bg-input-1: #FFFFFF;
+    --bg-input-2: #F8F9FA;
+    --bg-input-3: #F1F3F4;
+    --bg-input-4: #E5E7EB;
+    --bg-hover-1: #EBECED;
+    --bg-hover-2: #DEDFE0;
+    --bg-hover-3: #E4E6E7;
+    --text-color: #111827;
+    --text-primary: #111827;
+    --text-secondary: #4B5563;
+    --text-muted: #6B7280;
+    --text-disabled: #9CA3AF;
+}
+
+.dark {
+    --color-primary: #00eb2f;
+    --color-primary-lighten-1: #26FF55;
+    --color-primary-lighten-2: #4DFF7C;
+    --color-primary-darken-1: #00D115;
+    --color-primary-darken-2: #00B800;
+    --color-primary-lighten-3: #73FFA2;
+    --color-secondary: #6B7280;
+    --color-secondary-lighten-1: #9198A6;
+    --color-secondary-lighten-2: #B8BFCD;
+    --color-secondary-darken-1: #515866;
+    --color-secondary-darken-2: #383F4D;
+    --color-secondary-lighten-3: #DEE5F3;
+    --color-accent: #7C3AED;
+    --color-accent-lighten-1: #A260FF;
+    --color-accent-lighten-2: #C987FF;
+    --color-accent-darken-1: #6220D3;
+    --color-accent-darken-2: #4907BA;
+    --color-error: #DC2626;
+    --color-error-lighten-1: #FF4C4C;
+    --color-error-lighten-2: #FF7373;
+    --color-error-darken-1: #C20C0C;
+    --color-error-darken-2: #A90000;
+    --color-success: #059669;
+    --color-success-lighten-1: #2BBC8F;
+    --color-success-lighten-2: #52E3B6;
+    --color-success-darken-1: #007C4F;
+    --color-success-darken-2: #006336;
+    --color-warning: #D97706;
+    --color-warning-lighten-1: #FF9D2C;
+    --color-warning-lighten-2: #FFC453;
+    --color-warning-darken-1: #BF5D00;
+    --color-warning-darken-2: #A64400;
+    --color-info: #1E3A8A;
+    --color-info-lighten-1: #4460B0;
+    --color-info-lighten-2: #6B87D7;
+    --color-info-darken-1: #042070;
+    --color-info-darken-2: #000757;
+    --bg-dark-1: #161B22;
+    --bg-dark-2: #21262D;
+    --bg-dark-3: #30363D;
+    --bg-dark-4: #484F58;
+    --bg-card-1: #161B22;
+    --bg-card-2: #21262D;
+    --bg-card-3: #30363D;
+    --bg-card-4: #484F58;
+    --bg-page-1: #0D1117;
+    --bg-page-2: #070C13;
+    --bg-page-3: #232930;
+    --bg-page-4: #484F58;
+    --bg-modal-1: #161B22;
+    --bg-modal-2: #21262D;
+    --bg-modal-3: #30363D;
+    --bg-modal-4: #484F58;
+    --bg-sidebar-1: #161B22;
+    --bg-sidebar-2: #21262D;
+    --bg-sidebar-3: #30363D;
+    --bg-sidebar-4: #484F58;
+    --bg-header-1: #161B22;
+    --bg-header-2: #21262D;
+    --bg-header-3: #30363D;
+    --bg-header-4: #484F58;
+    --bg-elevated-1: #21262D;
+    --bg-elevated-2: #30353C;
+    --bg-elevated-3: #383E45;
+    --bg-elevated-4: #484F58;
+    --bg-input-1: #0D1117;
+    --bg-input-2: #070C13;
+    --bg-input-3: #232930;
+    --bg-input-4: #484F58;
+    --bg-hover-1: #3D434A;
+    --bg-hover-2: #4A5057;
+    --bg-hover-3: #555C65;
+    --text-color: #FFFFFF;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E5E7EB;
+    --text-muted: #9CA3AF;
+    --text-disabled: #6B7280;
+}
+
+/* Define Tailwind theme colors using CSS variables */
+/* Note: In Tailwind v4, we define colors in @theme but they need to reference our CSS variables */
+/* For dynamic theme support, we'll create utility classes below */
+@theme {
+    /* These static values are fallbacks - utility classes below use CSS variables for theme switching */
+    --color-primary: #00ab1a;
+    --color-primary-lighten-1: #26FF55;
+    --color-primary-lighten-2: #4DFF7C;
+    --color-primary-lighten-3: #73FFA2;
+    --color-primary-darken-1: #00D115;
+    --color-primary-darken-2: #00B800;
+    
+    --color-secondary: #6B7280;
+    --color-secondary-lighten-1: #9198A6;
+    --color-secondary-lighten-2: #B8BFCD;
+    --color-secondary-lighten-3: #DEE5F3;
+    --color-secondary-darken-1: #515866;
+    --color-secondary-darken-2: #383F4D;
+    
+    --color-accent: #7C3AED;
+    --color-accent-lighten-1: #A260FF;
+    --color-accent-lighten-2: #C987FF;
+    --color-accent-darken-1: #6220D3;
+    --color-accent-darken-2: #4907BA;
+    
+    --color-error: #DC2626;
+    --color-error-lighten-1: #FF4C4C;
+    --color-error-lighten-2: #FF7373;
+    --color-error-darken-1: #C20C0C;
+    --color-error-darken-2: #A90000;
+    
+    --color-success: #059669;
+    --color-success-lighten-1: #2BBC8F;
+    --color-success-lighten-2: #52E3B6;
+    --color-success-darken-1: #007C4F;
+    --color-success-darken-2: #006336;
+    
+    --color-warning: #D97706;
+    --color-warning-lighten-1: #FF9D2C;
+    --color-warning-lighten-2: #FFC453;
+    --color-warning-darken-1: #BF5D00;
+    --color-warning-darken-2: #A64400;
+    
+    --color-info: #1E3A8A;
+    --color-info-lighten-1: #4460B0;
+    --color-info-lighten-2: #6B87D7;
+    --color-info-darken-1: #042070;
+    --color-info-darken-2: #000757;
+}
+
+/* Utility classes for backgrounds */
+.bg-page {
+    background-color: var(--bg-page-1);
+}
+
+.dark .bg-page-dark {
+    background-color: var(--bg-page-1);
+}
+
+.bg-header {
+    background-color: var(--bg-header-1);
+}
+
+.dark .bg-header-dark {
+    background-color: var(--bg-header-1);
+}
+
+.bg-card {
+    background-color: var(--bg-card-1);
+}
+
+.dark .bg-card-dark {
+    background-color: var(--bg-card-1);
+}
+
+.bg-card-dark-light {
+    background-color: var(--bg-card-2);
+}
+
+.dark .bg-card-dark-light {
+    background-color: var(--bg-card-2);
+}
+
+.bg-hover {
+    background-color: var(--bg-hover-1);
+}
+
+.dark .bg-hover-dark {
+    background-color: var(--bg-hover-1);
+}
+
+.bg-hover-variant {
+    background-color: var(--bg-card-2);
+}
+
+.dark .bg-hover-variant {
+    background-color: var(--bg-card-2);
+}
+
+.bg-elevated {
+    background-color: var(--bg-elevated-1);
+}
+
+.dark .bg-elevated-dark {
+    background-color: var(--bg-elevated-1);
+}
+
+.bg-sidebar {
+    background-color: var(--bg-sidebar-1);
+}
+
+.dark .bg-sidebar-dark {
+    background-color: var(--bg-sidebar-1);
+}
+
+.bg-input {
+    background-color: var(--bg-input-1);
+}
+
+.dark .bg-input-dark {
+    background-color: var(--bg-input-1);
+}
+
+/* Theme color utility classes - use CSS variables for dynamic theming */
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+.border-primary {
+    border-color: var(--color-primary);
+}
+
+.bg-secondary {
+    background-color: var(--color-secondary);
+}
+
+.text-secondary {
+    color: var(--color-secondary);
+}
+
+.border-secondary {
+    border-color: var(--color-secondary);
+}
+
+.bg-accent {
+    background-color: var(--color-accent);
+}
+
+.text-accent {
+    color: var(--color-accent);
+}
+
+.border-accent {
+    border-color: var(--color-accent);
+}
+
+.bg-error {
+    background-color: var(--color-error);
+}
+
+.text-error {
+    color: var(--color-error);
+}
+
+.border-error {
+    border-color: var(--color-error);
+}
+
+.bg-success {
+    background-color: var(--color-success);
+}
+
+.text-success {
+    color: var(--color-success);
+}
+
+.border-success {
+    border-color: var(--color-success);
+}
+
+.bg-warning {
+    background-color: var(--color-warning);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.border-warning {
+    border-color: var(--color-warning);
+}
+
+.bg-info {
+    background-color: var(--color-info);
+}
+
+.text-info {
+    color: var(--color-info);
+}
+
+.border-info {
+    border-color: var(--color-info);
+}
+
+/* Utility classes for text colors */
+.text-text-on-card {
+    color: var(--text-primary);
+}
+
+.dark .text-text-on-card-dark {
+    color: var(--text-primary);
+}
+
+.text-text-primary-light {
+    color: var(--text-secondary);
+}
+
+.dark .text-text-primary-light {
+    color: var(--text-secondary);
+}
+
+.text-text-secondary-variant {
+    color: var(--text-muted);
+}
+
+.dark .text-text-secondary-variant {
+    color: var(--text-muted);
+}
+
+/* Border colors */
+.border-secondary-lighten-2 {
+    border-color: var(--color-secondary-lighten-2);
+}
+
+.dark .border-secondary-dark-darken-1 {
+    border-color: var(--color-secondary-darken-1);
+}

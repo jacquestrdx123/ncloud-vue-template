@@ -1,0 +1,586 @@
+<template>
+  <div class="sidebar-menu-container">
+    <!-- Desktop Sidebar -->
+    <aside
+      v-if="!isMobile"
+      :class="[
+        'sidebar',
+        'sidebar-desktop',
+        isCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded',
+        'bg-sidebar dark:bg-sidebar-dark border-r border-gray-200 dark:border-gray-700 transition-all duration-300',
+        isCollapsed ? 'w-16' : 'w-[250px]'
+      ]"
+      :data-collapsed="isCollapsed"
+    >
+      <!-- Branding Section -->
+      <div class="branding-section border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between bg-gradient-to-r from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20">
+        <div class="branding-logo flex items-center gap-3 overflow-hidden">
+          <img 
+            v-if="logoUrl"
+            :src="logoUrl" 
+            :alt="logoAlt" 
+            class="flex-shrink-0 h-10 w-10 object-contain"
+          />
+        </div>
+        <button
+          @click="toggleSidebar"
+          class="toggle-button p-2 hover:bg-primary/20 dark:hover:bg-primary/30 rounded-lg transition-all duration-200 flex-shrink-0 text-text-secondary-variant dark:text-text-secondary-variant hover:text-primary hover:scale-110"
+          :title="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+        >
+          <component 
+            :is="isCollapsed ? ChevronRightIcon : ChevronLeftIcon" 
+            class="h-5 w-5"
+          />
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div v-if="!isCollapsed" class="search-section border-b border-gray-200 dark:border-gray-700 p-3">
+        <div class="relative">
+          <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Search menu..."
+            class="w-full pl-10 pr-10 py-2 text-sm bg-input dark:bg-input-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-sidebar dark:focus:ring-offset-sidebar-dark focus:border-primary/50 transition-all duration-200 text-text-on-card dark:text-text-on-card-dark placeholder-gray-500 dark:placeholder-gray-400"
+          />
+          <button
+            v-if="searchQuery"
+            @click="clearSearch"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          >
+            <XMarkIcon class="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu Items -->
+      <nav class="menu-nav">
+        <div ref="scrollContainer" class="menu-scroll-container">
+          <!-- Expanded Favorite Children -->
+          <ExpandedFavoriteChildren :is-collapsed="isCollapsed" @select="onSelect" />
+          
+          <!-- No Results Message -->
+          <div v-if="searchQuery && filteredItems.length === 0" class="p-4 text-center">
+            <MagnifyingGlassIcon class="h-10 w-10 text-gray-400 dark:text-gray-600 mx-auto mb-2" />
+            <p class="text-sm text-gray-500 dark:text-gray-400">No menu items found</p>
+            <button @click="clearSearch" class="mt-2 text-xs text-primary hover:text-primary-lighten-1 hover:underline transition-colors font-medium">
+              Clear search
+            </button>
+          </div>
+          
+          <!-- Menu Items -->
+          <ul v-else class="space-y-1 p-2">
+            <template v-for="item in filteredItems" :key="item.key">
+              <li>
+                <!-- Top Level Item -->
+                <MenuItem
+                  :item="item"
+                  :level="1"
+                  :is-collapsed="isCollapsed"
+                  @select="onSelect"
+                />
+              </li>
+            </template>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Mobile Sidebar Drawer -->
+    <Transition name="slide-drawer">
+      <aside
+        v-if="isMobile && isMobileMenuOpen"
+        class="sidebar sidebar-mobile bg-sidebar dark:bg-sidebar-dark border-r border-gray-200 dark:border-gray-700 w-[250px] z-50"
+      >
+        <!-- Branding Section -->
+        <div class="branding-section border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between bg-gradient-to-r from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/20">
+          <div class="branding-logo flex items-center gap-3 overflow-hidden">
+            <img 
+              v-if="logoUrl"
+              :src="logoUrl" 
+              :alt="logoAlt" 
+              class="flex-shrink-0 h-10 w-10 object-contain"
+            />
+          </div>
+          <button
+            @click="closeMobileMenu"
+            class="close-button p-2 hover:bg-primary/20 dark:hover:bg-primary/30 rounded-lg transition-all duration-200 flex-shrink-0 text-text-secondary-variant dark:text-text-secondary-variant hover:text-primary hover:scale-110"
+            title="Close menu"
+          >
+            <XMarkIcon class="h-5 w-5" />
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-section border-b border-gray-200 dark:border-gray-700 p-3">
+          <div class="relative">
+            <MagnifyingGlassIcon class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500" />
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search menu..."
+              class="w-full pl-10 pr-10 py-2 text-sm bg-input dark:bg-input-dark border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-sidebar dark:focus:ring-offset-sidebar-dark focus:border-primary/50 transition-all duration-200 text-text-on-card dark:text-text-on-card-dark placeholder-gray-500 dark:placeholder-gray-400"
+            />
+            <button
+              v-if="searchQuery"
+              @click="clearSearch"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            >
+              <XMarkIcon class="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        <!-- Menu Items -->
+        <nav class="menu-nav">
+          <div ref="scrollContainer" class="menu-scroll-container">
+            <!-- Expanded Favorite Children -->
+            <ExpandedFavoriteChildren :is-collapsed="false" @select="onSelect" />
+            
+            <!-- No Results Message -->
+            <div v-if="searchQuery && filteredItems.length === 0" class="p-4 text-center">
+              <MagnifyingGlassIcon class="h-10 w-10 text-gray-400 dark:text-gray-600 mx-auto mb-2" />
+              <p class="text-sm text-gray-500 dark:text-gray-400">No menu items found</p>
+              <button @click="clearSearch" class="mt-2 text-xs text-ciba-green dark:text-ciba-green hover:underline dark:hover:text-ciba-green/80 transition-colors">
+                Clear search
+              </button>
+            </div>
+            
+            <!-- Menu Items -->
+            <ul v-else class="space-y-1 p-2">
+              <template v-for="item in filteredItems" :key="item.key">
+                <li>
+                  <!-- Top Level Item -->
+                  <MenuItem
+                    :item="item"
+                    :level="1"
+                    :is-collapsed="false"
+                    @select="onSelect"
+                  />
+                </li>
+              </template>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+    </Transition>
+
+    <!-- Mobile Overlay -->
+    <Transition name="overlay">
+      <div
+        v-if="isMobile && isMobileMenuOpen"
+        @click="closeMobileMenu"
+        class="mobile-overlay fixed inset-0 bg-black bg-opacity-50 z-40"
+      />
+    </Transition>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import { usePage, router } from '@inertiajs/vue3'
+import { ChevronLeftIcon, ChevronRightIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { useSidebar } from './composables/useSidebar.js'
+import MenuItem from './MenuItem.vue'
+import ExpandedFavoriteChildren from './ExpandedFavoriteChildren.vue'
+
+const props = defineProps({
+  logoUrl: {
+    type: String,
+    default: null,
+  },
+  logoAlt: {
+    type: String,
+    default: 'Logo',
+  },
+})
+
+const page = usePage()
+const { isCollapsed, toggleSidebar: toggle, loadSidebarState } = useSidebar()
+const isMobileMenuOpen = ref(false)
+const searchQuery = ref('')
+const scrollContainer = ref(null)
+const SCROLL_STORAGE_KEY = 'vue-admin-sidebar-scroll'
+const isMobile = ref(false)
+
+const items = computed(() => {
+  // Use the 'menu' prop from MenuWebService (static menu definition)
+  const shared = page?.props?.menu
+  if (!shared) return []
+
+  const list = Array.isArray(shared) 
+    ? shared 
+    : Object.entries(shared).map(([key, value]) => ({ key, ...value }))
+
+  const processChildren = (children) => {
+    if (!children) return null
+    
+    const childArray = Object.entries(children).map(([childKey, childValue]) => ({
+      key: childKey,
+      label: childValue.label ?? childValue.title ?? '',
+      icon: childValue.icon ?? null,
+      url: childValue.url ?? childValue.href ?? '#',
+      active: childValue.active ?? false,
+      children: childValue.children ? processChildren(childValue.children) : null,
+    }))
+    
+    // Return null if array is empty instead of empty array
+    return childArray.length > 0 ? childArray : null
+  }
+
+  return list
+    .map((item) => ({
+      key: item.key,
+      label: item.label ?? item.title ?? '',
+      icon: item.icon ?? 'folder',
+      url: item.url ?? item.href ?? '#',
+      active: item.active ?? false,
+      children: item.children ? processChildren(item.children) : null,
+    }))
+    .filter((item) => {
+      // Filter out groups that have no children (empty arrays)
+      if (item.url === '#' && (!item.children || item.children.length === 0)) {
+        return false
+      }
+      return true
+    })
+})
+
+// Filtered items based on search query
+const filteredItems = computed(() => {
+  if (!searchQuery.value) {
+    return items.value
+  }
+
+  const query = searchQuery.value.toLowerCase()
+
+  const filterChildren = (children) => {
+    if (!children) return null
+    
+    const filtered = children.filter(child => 
+      child.label.toLowerCase().includes(query)
+    )
+    
+    return filtered.length > 0 ? filtered : null
+  }
+
+  return items.value
+    .map(item => {
+      const matchesLabel = item.label.toLowerCase().includes(query)
+      const filteredChildren = item.children ? filterChildren(item.children) : null
+      
+      // Include group if it matches OR if it has matching children
+      if (matchesLabel || filteredChildren) {
+        return {
+          ...item,
+          children: filteredChildren,
+          // Auto-expand groups with matching children during search
+          forceExpanded: !matchesLabel && filteredChildren
+        }
+      }
+      
+      return null
+    })
+    .filter(item => item !== null)
+})
+
+const clearSearch = () => {
+  searchQuery.value = ''
+}
+
+const onSelect = (item) => {
+  if (!item) {
+    return
+  }
+
+  // Prioritize route over URL
+  if (item.route && item.route !== '#' && typeof route === 'function') {
+    try {
+      // Convert route name to URL using Ziggy
+      const routeUrl = route(item.route)
+      if (routeUrl) {
+        router.visit(routeUrl)
+      }
+    } catch (e) {
+      // If route doesn't exist, fall back to URL
+      if (item.url && item.url !== '#') {
+        router.visit(item.url)
+      }
+    }
+  } else if (item.url && item.url !== '#') {
+    router.visit(item.url)
+  }
+
+  // Close mobile menu after selection
+  if (isMobile.value) {
+    isMobileMenuOpen.value = false
+  }
+}
+
+const toggleSidebar = () => {
+  toggle()
+}
+
+const openMobileMenu = () => {
+  isMobileMenuOpen.value = true
+  // Prevent body scroll when menu is open
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = 'hidden'
+  }
+}
+
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false
+  // Restore body scroll when menu is closed
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = ''
+  }
+}
+
+const persistScrollPosition = () => {
+  if (!scrollContainer.value) {
+    return
+  }
+
+  sessionStorage.setItem(SCROLL_STORAGE_KEY, String(scrollContainer.value.scrollTop))
+}
+
+const restoreScrollPosition = () => {
+  if (!scrollContainer.value) {
+    return
+  }
+
+  const stored = sessionStorage.getItem(SCROLL_STORAGE_KEY)
+  if (stored === null) {
+    return
+  }
+
+  requestAnimationFrame(() => {
+    scrollContainer.value.scrollTop = Number(stored)
+  })
+}
+
+// Load saved preference on mount
+onMounted(() => {
+  checkMobile()
+  loadSidebarState()
+
+  restoreScrollPosition()
+
+  if (scrollContainer.value) {
+    scrollContainer.value.addEventListener('scroll', persistScrollPosition, { passive: true })
+  }
+  
+  // Handle window resize
+  window.addEventListener('resize', handleResize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+
+  if (scrollContainer.value) {
+    scrollContainer.value.removeEventListener('scroll', persistScrollPosition)
+  }
+  
+  // Ensure body scroll is restored
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = ''
+  }
+})
+
+const checkMobile = () => {
+  const wasMobile = isMobile.value
+  isMobile.value = window.innerWidth < 1024
+  
+  // If switching from mobile to desktop, close mobile menu
+  if (wasMobile && !isMobile.value) {
+    isMobileMenuOpen.value = false
+  }
+  
+  if (isMobile.value) {
+    // On mobile, ensure sidebar state is reset
+    if (!isMobileMenuOpen.value) {
+      isCollapsed.value = true
+      document.body.classList.add('sidebar-collapsed')
+      document.body.classList.remove('sidebar-expanded')
+    }
+  }
+}
+
+const handleResize = () => {
+  checkMobile()
+  if (!isMobile.value && window.innerWidth < 1024) {
+    isCollapsed.value = true
+    document.body.classList.add('sidebar-collapsed')
+    document.body.classList.remove('sidebar-expanded')
+  }
+}
+
+watch(
+  () => page.url,
+  () => {
+    // Close mobile menu on navigation
+    if (isMobile.value && isMobileMenuOpen.value) {
+      closeMobileMenu()
+    }
+    nextTick(() => {
+      restoreScrollPosition()
+    })
+  }
+)
+
+// Expose toggle function for parent components
+defineExpose({
+  toggleSidebar,
+  isCollapsed,
+  openMobileMenu,
+  closeMobileMenu,
+  isMobileMenuOpen
+})
+</script>
+
+<style scoped>
+.sidebar-menu-container {
+  display: contents;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-mobile {
+  z-index: 50;
+}
+
+.sidebar-expanded {
+  width: 250px;
+}
+
+.sidebar-collapsed {
+  width: 64px;
+}
+
+.branding-section {
+  flex-shrink: 0;
+  min-height: 60px;
+}
+
+.menu-nav {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.menu-scroll-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.menu-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.menu-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-scroll-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-primary-lighten-1));
+  border-radius: 3px;
+  opacity: 0.4;
+}
+
+.menu-scroll-container::-webkit-scrollbar-thumb:hover {
+  opacity: 0.7;
+  background: linear-gradient(to bottom, var(--color-primary-lighten-1), var(--color-primary));
+}
+
+/* Dark mode scrollbar */
+.dark .menu-scroll-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--color-primary), var(--color-primary-lighten-1));
+  opacity: 0.5;
+}
+
+.dark .menu-scroll-container::-webkit-scrollbar-thumb:hover {
+  opacity: 0.8;
+  background: linear-gradient(to bottom, var(--color-primary-lighten-1), var(--color-primary));
+}
+
+.toggle-button {
+  opacity: 0.7;
+}
+
+.toggle-button:hover {
+  opacity: 1;
+}
+
+.sidebar-collapsed .toggle-button {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mobile-overlay {
+  backdrop-filter: blur(2px);
+}
+
+/* Transitions */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
+}
+
+/* Mobile Drawer Animation */
+.slide-drawer-enter-active,
+.slide-drawer-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.slide-drawer-enter-from {
+  transform: translateX(-100%);
+}
+
+.slide-drawer-leave-to {
+  transform: translateX(-100%);
+}
+
+.sidebar-mobile {
+  transform: translateX(0);
+}
+
+.close-button {
+  opacity: 0.7;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+</style>
+
