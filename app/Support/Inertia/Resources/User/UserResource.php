@@ -2,9 +2,9 @@
 
 namespace App\Support\Inertia\Resources\User;
 
+use InertiaResource\Inertia\InertiaResource;
 use InertiaResource\Columns\TextColumn;
 use InertiaResource\FormFields\TextField;
-use InertiaResource\Inertia\InertiaResource;
 
 class UserResource extends InertiaResource
 {
@@ -26,7 +26,7 @@ class UserResource extends InertiaResource
     {
         return [
             'columns' => [
-                TextColumn::make('id', 'ID'),
+                                TextColumn::make('id', 'ID'),
                 TextColumn::make('name', 'Name'),
                 TextColumn::make('email', 'EMAIL'),
                 // Add your columns here
@@ -51,3 +51,4 @@ class UserResource extends InertiaResource
         ];
     }
 }
+

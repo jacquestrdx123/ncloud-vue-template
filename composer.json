@@ -11,7 +11,7 @@
     "require": {
         "php": "^8.2",
         "inertiajs/inertia-laravel": "^2.0",
-        "jacquestrdx123/vue-inertia-resources": "^2.7",
+        "jacquestrdx123/vue-inertia-resources": "^2.7.24",
         "jacquestrdx123/vue-sidebar-menu": "^1.0.7",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",

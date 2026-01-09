@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Page Header -->
       <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ title || 'User' }}</h1>
+        <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ title || 'Resources' }}</h1>
         <p v-if="description" class="mt-1 text-sm text-gray-600 dark:text-gray-400">
           {{ description }}
         </p>
@@ -34,7 +34,7 @@
       >
         <template #header-actions>
           <Link
-            :href="route('users.create')"
+            :href="getRouteName('create') ? route(getRouteName('create')) : '#'"
             class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
           >
             Add {{ title || 'Item' }}
@@ -110,7 +110,7 @@ const props = defineProps({
   },
   resourceSlug: {
     type: String,
-    default: 'users'
+    default: null
   },
   rawSql: {
     type: String,
@@ -129,6 +129,26 @@ const props = defineProps({
 const loading = ref(false)
 const { getCurrentParams } = usePreserveQueryParams()
 
+// Construct route name from resource slug
+const getRouteName = (action) => {
+  if (!props.resourceSlug) {
+    // Fallback: try to extract from current route
+    const currentRoute = route().current()
+    if (currentRoute) {
+      const parts = currentRoute.split('.')
+      if (parts.length >= 2) {
+        const resource = parts.slice(0, -1).join('.')
+        return `${resource}.${action}`
+      }
+    }
+    return null
+  }
+  
+  // Convert slug to route name (e.g., 'members' -> 'vue.members')
+  const routePrefix = 'vue.'
+  return `${routePrefix}${props.resourceSlug}.${action}`
+}
+
 const handleAction = ({ action, row }) => {
   // Row should always have an id property (normalized by BaseDataTable)
   if (!row?.id) {
@@ -136,22 +156,27 @@ const handleAction = ({ action, row }) => {
     return
   }
 
+  const routeName = getRouteName(action)
+  if (!routeName || !route(routeName)) {
+    return
+  }
+
   switch (action) {
     case 'view':
-      router.visit(route('users.show', row.id))
+      router.visit(route(getRouteName('show'), row.id))
       break
     case 'edit':
-      router.visit(route('users.edit', row.id))
+      router.visit(route(routeName, row.id))
       break
     case 'delete':
       if (confirm('Are you sure you want to delete this item?')) {
-        router.delete(route('users.destroy', row.id), {
+        router.delete(route(getRouteName('destroy'), row.id), {
           preserveScroll: true,
           onSuccess: () => {
             // Success notification handled by flash messages
           }
         })
-      }
+    }
       break
   }
 }
@@ -159,11 +184,15 @@ const handleAction = ({ action, row }) => {
 const handleBulkAction = ({ action, rows }) => {
   // Rows should always have an id property (normalized by BaseDataTable)
   const ids = rows.map(r => r.id).filter(id => id !== null && id !== undefined)
-  
+  const routeName = getRouteName('bulk-action')
+  if (!routeName || !route(routeName)) {
+    return
+  }
+
   switch (action) {
     case 'delete':
       if (confirm(`Are you sure you want to delete ${ids.length} items?`)) {
-        router.post(route('users.bulk-action'), {
+        router.post(route(routeName), {
           action: 'delete',
           ids
         }, {
@@ -172,7 +201,7 @@ const handleBulkAction = ({ action, rows }) => {
       }
       break
     case 'export':
-      router.post(route('users.bulk-action'), {
+    router.post(route(routeName), {
         action: 'export',
         ids
     })
@@ -181,6 +210,11 @@ const handleBulkAction = ({ action, rows }) => {
 }
 
 const handleSort = ({ column, direction }) => {
+  const routeName = getRouteName('index')
+  if (!routeName || !route(routeName)) {
+    return
+  }
+
   // Get current URL params to preserve filters and presets
   const currentParams = getCurrentParams()
   const params = {
@@ -189,7 +223,7 @@ const handleSort = ({ column, direction }) => {
       sort_direction: direction
   }
   
-  router.get(route('users.index'), params, {
+  router.get(route(routeName), params, {
       preserveState: true,
     preserveScroll: true,
     replace: true
@@ -197,7 +231,12 @@ const handleSort = ({ column, direction }) => {
 }
 
 const handleFilter = (filters) => {
-  router.get(route('users.index'), filters, {
+  const routeName = getRouteName('index')
+  if (!routeName || !route(routeName)) {
+    return
+  }
+
+    router.get(route(routeName), filters, {
       preserveState: true,
       preserveScroll: true
     })

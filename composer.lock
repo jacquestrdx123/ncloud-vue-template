@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3d32b76bef755e78e5085319963b031",
+    "content-hash": "43d948bef50a57c9e99ec025904c609e",
     "packages": [
         {
             "name": "brick/math",
@@ -1124,16 +1124,16 @@
         },
         {
             "name": "jacquestrdx123/vue-inertia-resources",
-            "version": "2.7.21",
+            "version": "2.7.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jacquestrdx123/vue3-admin-crud.git",
-                "reference": "bd7b472699174daa4cf6ba12bf1fbf75a898e255"
+                "reference": "e7568fbbcb753191ddd532e7934c7380c2ffb4e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jacquestrdx123/vue3-admin-crud/zipball/bd7b472699174daa4cf6ba12bf1fbf75a898e255",
-                "reference": "bd7b472699174daa4cf6ba12bf1fbf75a898e255",
+                "url": "https://api.github.com/repos/jacquestrdx123/vue3-admin-crud/zipball/e7568fbbcb753191ddd532e7934c7380c2ffb4e4",
+                "reference": "e7568fbbcb753191ddd532e7934c7380c2ffb4e4",
                 "shasum": ""
             },
             "require": {
@@ -1185,22 +1185,22 @@
             ],
             "support": {
                 "issues": "https://github.com/jacquestrdx123/vue3-admin-crud/issues",
-                "source": "https://github.com/jacquestrdx123/vue3-admin-crud/tree/v2.7.21"
+                "source": "https://github.com/jacquestrdx123/vue3-admin-crud/tree/v2.7.24"
             },
-            "time": "2026-01-06T11:44:47+00:00"
+            "time": "2026-01-09T13:46:31+00:00"
         },
         {
             "name": "jacquestrdx123/vue-sidebar-menu",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jacquestrdx123/vue-sidebar-menu.git",
-                "reference": "f05bfeb29f2e2df54e77679fe22a5e50eba16475"
+                "reference": "929b21848ec21d72f3f786b62d8c586ce4088323"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jacquestrdx123/vue-sidebar-menu/zipball/f05bfeb29f2e2df54e77679fe22a5e50eba16475",
-                "reference": "f05bfeb29f2e2df54e77679fe22a5e50eba16475",
+                "url": "https://api.github.com/repos/jacquestrdx123/vue-sidebar-menu/zipball/929b21848ec21d72f3f786b62d8c586ce4088323",
+                "reference": "929b21848ec21d72f3f786b62d8c586ce4088323",
                 "shasum": ""
             },
             "require": {
@@ -1238,9 +1238,9 @@
             "description": "A Laravel package providing a database-driven sidebar menu system with Vue 3 components",
             "support": {
                 "issues": "https://github.com/jacquestrdx123/vue-sidebar-menu/issues",
-                "source": "https://github.com/jacquestrdx123/vue-sidebar-menu/tree/v1.0.7"
+                "source": "https://github.com/jacquestrdx123/vue-sidebar-menu/tree/v1.0.8"
             },
-            "time": "2026-01-08T08:47:11+00:00"
+            "time": "2026-01-08T09:06:39+00:00"
         },
         {
             "name": "laravel/framework",
@@ -9745,12 +9745,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "b01be90dceff69c88c7b36c30ee45c9fd9107f7f"
+                "reference": "bdbabc199a7ba9965484e4725d66170e5711323b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/b01be90dceff69c88c7b36c30ee45c9fd9107f7f",
-                "reference": "b01be90dceff69c88c7b36c30ee45c9fd9107f7f",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bdbabc199a7ba9965484e4725d66170e5711323b",
+                "reference": "bdbabc199a7ba9965484e4725d66170e5711323b",
                 "shasum": ""
             },
             "require": {
@@ -9799,7 +9799,7 @@
                 "issues": "https://github.com/webmozarts/assert/issues",
                 "source": "https://github.com/webmozarts/assert/tree/2.1.1"
             },
-            "time": "2026-01-07T17:26:38+00:00"
+            "time": "2026-01-08T11:28:40+00:00"
         }
     ],
     "aliases": [],
