@@ -26,16 +26,3 @@ Route::middleware('auth')->group(function () {
         Route::post('/export', [App\Http\Controllers\Inertia\User\UserController::class, 'export'])->name('export');
     });
 });
-
-// vue.poops routes
-Route::prefix('poops')->name('poops.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'index'])->name('index');
-    Route::get('/create', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'create'])->name('create');
-    Route::post('/', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'store'])->name('store');
-    Route::get('/{id}', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'show'])->name('show');
-    Route::get('/{id}/edit', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'update'])->name('update');
-    Route::delete('/{id}', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'destroy'])->name('destroy');
-    Route::post('/bulk-action', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'bulkAction'])->name('bulk-action');
-    Route::post('/export', [App\Http\Controllers\Inertia\Poop\PoopController::class, 'export'])->name('export');
-});
